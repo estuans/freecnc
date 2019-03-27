@@ -55,14 +55,14 @@ SDL_Surface *MessagePool::getMessages()
     if (msglist.empty()) {
         return textimg;
     }
-    textimg = SDL_CreateRGBSurface(SDL_SWSURFACE|SDL_SRCCOLORKEY, width,
+    textimg = SDL_CreateRGBSurface(SDL_SWSURFACE, width,
             static_cast<int>(msglist.size()*(msgfont.getHeight()+1)), 16, 0, 0, 0, 0);
     dest.x = 0;
     dest.y = 0;
     dest.w = textimg->w;
     dest.h = textimg->h;
     SDL_FillRect(textimg, &dest, 0);
-    SDL_SetColorKey(textimg, SDL_SRCCOLORKEY, 0);
+    SDL_SetColorKey(textimg, SDL_TRUE, 0);
     unsigned int msgy = 0;
     drawMessage dm(msgfont, textimg, msgy);
     for_each(msglist.begin(), msglist.end(), dm);

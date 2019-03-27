@@ -4,6 +4,8 @@
 #include "SDL.h"
 #include "../freecnc.h"
 
+using namespace VFS;
+
 class ImageProc;
 
 struct SHPHeader {
@@ -100,7 +102,7 @@ private:
 // TemplateImage
 //-----------------------------------------------------------------------------
 
-class File;
+// class File;
 
 class TemplateImage : SHPBase
 {

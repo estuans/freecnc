@@ -509,8 +509,10 @@ SDL_Surface* CnCMap::getMiniMap(unsigned char pixsize) {
     minimap->format->Bmask = maptileOne->format->Bmask;
     minimap->format->Amask = maptileOne->format->Amask;
     if( maptileOne->format->palette != NULL ) {
-        SDL_SetColors(minimap, maptileOne->format->palette->colors, 0,
+
+        SDL_SetPaletteColors(maptileOne->format->palette, maptileOne->format->palette->colors, 0,
                       maptileOne->format->palette->ncolors);
+        SDL_SetSurfacePalette(maptileOne, maptileOne->format->palette);
     }
     int lineCounter = 0;
     for(unsigned int i = 0;  i < (unsigned int) width*height; i++, pos.x += pixsize,

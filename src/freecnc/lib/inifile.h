@@ -2,6 +2,7 @@
 #define _LIB_INIFILE_H
 
 #include "../basictypes.h"
+#include "../freecnc.h"
 
 #define MAXLINELENGTH 1024
 #define MAXSTRINGLENGTH 128
@@ -16,15 +17,22 @@ struct INIFileNotFound : std::runtime_error
     INIFileNotFound(const string& message) : std::runtime_error(message) { }
 };
 
-namespace VFS
+
+
+/*
+    namespace VFS
 {
     class File;
 }
 
+*/
+
+using namespace VFS;
+
 class INIFile
 {
 public:
-    INIFile(shared_ptr<VFS::File> inifile);
+    INIFile(shared_ptr<File> inifile);
 
     /// @TODO Would be nice if there was a version that returned a non-copy.
     char* readString(const char* section, const char* value);

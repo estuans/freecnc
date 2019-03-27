@@ -65,16 +65,21 @@ void CPSImage::loadImage()
 
     SDL_Surface* imgtmp = SDL_CreateRGBSurfaceFrom(&image_data[0], 320, 200, 8,
         320, 0, 0, 0, 0);
-    SDL_SetColors(imgtmp, palette, 0, 256);
-    SDL_SetColorKey(imgtmp, SDL_SRCCOLORKEY, 0);
+    //SDL_SetColors(imgtmp, palette, 0, 256);
+
+    SDL_SetPaletteColors(imgtmp->format->palette, imgtmp->format->palette->colors, 0,
+                    imgtmp->format->palette->ncolors);
+    SDL_SetSurfacePalette(imgtmp, imgtmp->format->palette);
+    SDL_SetColorKey(imgtmp, SDL_TRUE, 0);
 
     vector<unsigned char>().swap(cpsdata);
 
     if (scaleq >= 0) {
         image = scaler.scale(imgtmp, scaleq);
-        SDL_SetColorKey(image, SDL_SRCCOLORKEY, 0);
+        SDL_SetColorKey(image, SDL_TRUE, 0);
     } else {
-        image = SDL_DisplayFormat(imgtmp);
+        //image = SDL_DisplayFormat(imgtmp);
+        image = SDL_ConvertSurfaceFormat(imgtmp, SDL_PIXELFORMAT_ARGB8888, 0);
     }
     SDL_FreeSurface(imgtmp);
 }

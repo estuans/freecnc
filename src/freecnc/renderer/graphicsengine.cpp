@@ -4,6 +4,7 @@
 #include "../game/game_public.h"
 #include "../ui/ui_public.h"
 #include "graphicsengine.h"
+#include "SDL.h"
 
 using pc::imgcache;
 
@@ -14,10 +15,10 @@ GraphicsEngine::GraphicsEngine()
 
     string window_title("FreeCNC - " + game.config.map);
 
-    SDL_WM_SetCaption(window_title.c_str(), NULL);
+    //SDL_WM_SetCaption(window_title.c_str(), NULL);
 
     // Load icon
-    {
+/*     {
         SDL_Surface* icon = 0;
         shared_ptr<File> icon_file = game.vfs.open("base/icon.bmp");
         if (icon_file) {
@@ -29,11 +30,28 @@ GraphicsEngine::GraphicsEngine()
                 SDL_FreeSurface(icon);
             }
         }
-    }
+    } */
 
     unsigned int screenflags = SDL_SWSURFACE;
-    if (game.config.fullscreen) screenflags |= SDL_FULLSCREEN;
-    screen = SDL_SetVideoMode(width, height, game.config.bpp, screenflags);
+    if (game.config.fullscreen) screenflags |= SDL_WINDOW_FULLSCREEN;
+    //screen = SDL_SetVideoMode(width, height, game.config.bpp, screenflags);
+    SDL_Window *window = SDL_CreateWindow(window_title.c_str(),
+                             SDL_WINDOWPOS_UNDEFINED,
+                             SDL_WINDOWPOS_UNDEFINED,
+                             0, 0,
+                             screenflags);
+
+    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, 0);
+    SDL_Surface *screen = SDL_CreateRGBSurface(0, width, height, game.config.bpp,
+                                        0x00FF0000,
+                                        0x0000FF00,
+                                        0x000000FF,
+                                        0xFF000000);
+
+    SDL_Texture *sdlTexture = SDL_CreateTexture(renderer,
+                                                SDL_PIXELFORMAT_ARGB8888,
+                                                SDL_TEXTUREACCESS_STREAMING,
+                                                width, height);
 
     if (screen == NULL) {
         game.log << "GraphicsEngine: Unable to set mode " << width << "x" << height << ", "
@@ -93,7 +111,7 @@ void GraphicsEngine::setupCurrentGame()
     if (game.config.bpp == 8) {
         // This doesn't work, but the cursors look nicer so leaving it in to
         // remind me to look at cursor rendering again.
-        SDL_SetColors(screen, SHPBase::getPalette(0), 0, 256);
+        //SDL_SetColors(screen, SHPBase::getPalette(0), 0, 256);
     }
     /* this is a new game so clear the scren */
     clearScreen();
@@ -594,8 +612,8 @@ void GraphicsEngine::renderScene()
 
     /* draw the selectionbox */
     if (Input::isDrawing()) {
-        dest.x = min(Input::getMarkRect().x, (short)Input::getMarkRect().w);
-        dest.y = min(Input::getMarkRect().y, (short)Input::getMarkRect().h);
+        dest.x = min(Input::getMarkRect().x, (int)Input::getMarkRect().w);
+        dest.y = min(Input::getMarkRect().y, (int)Input::getMarkRect().h);
         dest.w = abs(Input::getMarkRect().x - Input::getMarkRect().w);
         dest.h = 1;
         SDL_FillRect(screen, &dest, whitepix);
@@ -647,7 +665,7 @@ void GraphicsEngine::renderScene()
     // just here to test drawLine
     //drawLine(-160, -120, dest.x, dest.y, 5, blackpix);
 
-    SDL_Flip(screen);
+    SDL_RenderPresent(renderer);
 #ifdef _WIN32
     SDL_FillRect(screen, &oldmouse, blackpix);
 #endif
@@ -801,7 +819,7 @@ void GraphicsEngine::drawVQAFrame(SDL_Surface *frame)
     dest.x = (screen->w-frame->w)>>1;
     dest.y = (screen->h-frame->h)>>1;
     SDL_BlitSurface(frame, NULL, screen, &dest);
-    SDL_Flip(screen);
+    SDL_RenderPresent(renderer);
 }
 
 
@@ -837,7 +855,7 @@ void GraphicsEngine::clearScreen()
     /* directx (and possibly other platforms needs to clear both
     front and back buffer */
 
-    SDL_Flip(screen);
+    SDL_RenderPresent(renderer);
     SDL_FillRect(screen, &dest, blackpix);
 
 }
@@ -884,7 +902,7 @@ void GraphicsEngine::renderLoading(const std::string& buff, SDL_Surface* logo)
     }
     pc::msg->clear();
 
-    SDL_Flip(screen);
+    SDL_RenderPresent(renderer);
 
 }
 

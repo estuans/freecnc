@@ -4,8 +4,10 @@
 #include "../freecnc.h"
 #include "soundcommon.h"
 
+using namespace VFS;
+
 struct SDL_AudioCVT;
-class File;
+//class File;
 
 enum {
     SOUND_DECODE_ERROR = 0,

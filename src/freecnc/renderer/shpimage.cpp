@@ -266,13 +266,16 @@ void SHPImage::getImage(unsigned short imgnum, SDL_Surface **img, SDL_Surface **
         }
         SDL_Surface* shadowimg = SDL_CreateRGBSurfaceFrom(shadowdata,
                 header.Width, header.Height, 8, header.Width, 0, 0, 0, 0);
-        SDL_SetColors(shadowimg, shadowpal, 0, 2);
-        SDL_SetColorKey(shadowimg, SDL_SRCCOLORKEY, 0);
+        //SDL_SetColors(shadowimg, shadowpal, 0, 2);
+        SDL_SetPaletteColors(shadowimg->format->palette, shadowpal, 0,
+                shadowimg->format->palette->ncolors);
+        SDL_SetSurfacePalette(shadowimg, shadowpal);
+        SDL_SetColorKey(shadowimg, SDL_TRUE, 0);
         SDL_SetAlpha(shadowimg, SDL_SRCALPHA|SDL_RLEACCEL, 128);
 
         if (scaleq >= 0) {
             *shadow = scale(shadowimg, scaleq);
-            SDL_SetColorKey(*shadow, SDL_SRCCOLORKEY, 0);
+            SDL_SetColorKey(*shadow, SDL_TRUE, 0);
         } else {
             *shadow = SDL_DisplayFormat(shadowimg);
         }
@@ -287,10 +290,10 @@ void SHPImage::getImage(unsigned short imgnum, SDL_Surface **img, SDL_Surface **
     }
     SDL_Surface* imageimg = SDL_CreateRGBSurfaceFrom(imgdata, header.Width, header.Height, 8, header.Width, 0, 0, 0, 0);
     SDL_SetColors(imageimg, palette[palnum], 0, 256);
-    SDL_SetColorKey(imageimg, SDL_SRCCOLORKEY, 0);
+    SDL_SetColorKey(imageimg, SDL_TRUE, 0);
     if (scaleq >= 0) {
         *img = scale(imageimg, scaleq);
-        SDL_SetColorKey(*img, SDL_SRCCOLORKEY, 0);
+        SDL_SetColorKey(*img, SDL_TRUE, 0);
     } else {
         *img = SDL_DisplayFormat(imageimg);
     }
@@ -343,7 +346,7 @@ void SHPImage::getImageAsAlpha(unsigned short imgnum, SDL_Surface **img)
 
     if (scaleq >= 0) {
         *img = scale(imageimg, scaleq);
-        SDL_SetColorKey(*img, SDL_SRCCOLORKEY, 0);
+        SDL_SetColorKey(*img, SDL_TRUE, 0);
     } else {
         *img = SDL_DisplayFormatAlpha(alphaimg);
     }
@@ -457,12 +460,12 @@ SDL_Surface *Dune2Image::getImage(unsigned short imgnum)
     }
 
     SDL_SetColors(image, palette[0], 0, 256);
-    SDL_SetColorKey(image, SDL_SRCCOLORKEY, 0);
+    SDL_SetColorKey(image, SDL_TRUE, 0);
 
     SDL_Surface *optimage;
     if (scaleq >= 0) {
         optimage = scale(image, scaleq);
-        SDL_SetColorKey(optimage, SDL_SRCCOLORKEY, 0);
+        SDL_SetColorKey(optimage, SDL_TRUE, 0);
     } else {
         optimage = SDL_DisplayFormat(image);
     }
@@ -581,12 +584,12 @@ SDL_Surface* TemplateImage::getImage(unsigned short imgnum)
 
     // Set the palette to be the map's palette
     SDL_SetColors(sdlimage, palette[0], 0, 256);
-    SDL_SetColorKey(sdlimage, SDL_SRCCOLORKEY, 0);
+    SDL_SetColorKey(sdlimage, SDL_TRUE, 0);
 
     SDL_Surface* retimage;
     if (scaleq >= 0) {
         retimage = scale(sdlimage, scaleq);
-        SDL_SetColorKey(sdlimage, SDL_SRCCOLORKEY, 0);
+        SDL_SetColorKey(sdlimage, SDL_TRUE, 0);
     } else {
         retimage = SDL_DisplayFormat(sdlimage);
     }

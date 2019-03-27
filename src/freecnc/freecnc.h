@@ -7,7 +7,6 @@
 #include <cstring>
 
 #include "SDL_video.h"  // Needs to go
-#include "SDL_keysym.h" // Needs to go
 
 #include "basictypes.h"
 #include "gameengine.h"

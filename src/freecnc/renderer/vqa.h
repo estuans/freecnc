@@ -6,7 +6,7 @@
 #include "../freecnc.h"
 #include "../sound/sound_public.h"
 
-class File;
+using namespace VFS;
 
 namespace VQAPriv
 {

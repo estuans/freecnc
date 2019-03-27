@@ -9,7 +9,7 @@ namespace {
     {
         PushTable(lua_State* L, const char* table) : L(L), table(table), new_table(true)
         {
-            lua_getfield(L, LUA_GLOBALSINDEX, table);
+            lua_getfield(L, LUA_RIDX_GLOBALS, table);
             if (lua_istable(L, -1)) {
                 new_table = false;
             } else {
@@ -27,7 +27,7 @@ namespace {
 
 LuaScript::LuaScript()
 {
-    L = lua_open();
+    L = luaL_newstate();
     lua_pushstring(L, game.config.mod.c_str());
     lua_setglobal(L, "gamemod");
     lua_pushboolean(L, game.config.debug);

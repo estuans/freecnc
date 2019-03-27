@@ -25,7 +25,7 @@ LoadingScreen::LoadingScreen()
         game.log << "Could not load startup graphic" << endl;
         logo = 0;
     }
-    renderThread = SDL_CreateThread(LoadingScreen::runRenderThread, this);
+    renderThread = SDL_CreateThread(LoadingScreen::runRenderThread, "loading", this);
 }
 
 LoadingScreen::~LoadingScreen()

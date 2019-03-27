@@ -264,7 +264,9 @@ SDL_Surface* ImageProc::scale(SDL_Surface* input, char quality)
     output->format->Bmask = input->format->Bmask;
     output->format->Amask = input->format->Amask;
     if( input->format->palette != NULL ) {
-        SDL_SetColors(output, input->format->palette->colors, 0, input->format->palette->ncolors);
+        // SDL_SetColors(output, input->format->palette->colors, 0, input->format->palette->ncolors);
+        SDL_SetPaletteColors(input->format->palette, input->format->palette->colors, 0, input->format->palette->ncolors);
+        SDL_SetSurfacePalette(output, input->format->palette);
     }
 
     //check the quality and call different functions
@@ -287,7 +289,9 @@ SDL_Surface* ImageProc::minimapScale(SDL_Surface *input, unsigned char pixsize)
     output->format->Bmask = input->format->Bmask;
     output->format->Amask = input->format->Amask;
     if( input->format->palette != NULL ) {
-        SDL_SetColors(output, input->format->palette->colors, 0, input->format->palette->ncolors);
+        //SDL_SetColors(output, input->format->palette->colors, 0, input->format->palette->ncolors);
+        SDL_SetPaletteColors(input->format->palette, input->format->palette->colors, 0, input->format->palette->ncolors);
+        SDL_SetSurfacePalette(output, input->format->palette);
     }
     scaleNearest(input, output);
 
@@ -305,25 +309,31 @@ void ImageProc::initVideoScale(SDL_Surface* input, int videoq)
     //Make a new video buffer with the apropriate size and bpp (bpp==8)
     //Delete the old one if it exsists
     SDL_FreeSurface(videoOutputBuffer);
+
+    SDL_Window *window = SDL_GetWindowFromID(0); // Hack for first window.
+    SDL_Surface *surface = SDL_GetWindowSurface(window);
+
+
     this->videoq = videoq;
     if( videoq == 1 ) {
         videoOutputBuffer = SDL_CreateRGBSurface (SDL_SWSURFACE,
-                            SDL_GetVideoSurface()->w,SDL_GetVideoSurface()->w*input->h/input->w,
+                            surface->w,surface->w*input->h/input->w,
                             16, 0xf800, 0x7c0, 0x3e, 1);
         //32, 0xff000000, 0xff0000, 0xff00, 0xff);
 
     } else {
         videoOutputBuffer = SDL_CreateRGBSurface (SDL_SWSURFACE,
-                            SDL_GetVideoSurface()->w,
-                            SDL_GetVideoSurface()->w*input->h/input->w,
+                            surface->w,
+                            surface->w*input->h/input->w,
                             8, 0xff, 0xff, 0xff, 0);
         videoOutputBuffer->format->Rmask = input->format->Rmask;
         videoOutputBuffer->format->Gmask = input->format->Gmask;
         videoOutputBuffer->format->Bmask = input->format->Bmask;
         videoOutputBuffer->format->Amask = input->format->Amask;
         if( input->format->palette != NULL ) {
-            SDL_SetColors(videoOutputBuffer, input->format->palette->colors,
-                          0, input->format->palette->ncolors);
+            //SDL_SetColors(videoOutputBuffer, input->format->palette->colors, 0, input->format->palette->ncolors);
+            SDL_SetPaletteColors(input->format->palette, input->format->palette->colors, 0, input->format->palette->ncolors);
+            SDL_SetSurfacePalette(videoOutputBuffer, input->format->palette);
         }
     }
 }
@@ -331,8 +341,12 @@ void ImageProc::initVideoScale(SDL_Surface* input, int videoq)
 SDL_Surface* ImageProc::scaleVideo(SDL_Surface *input)
 {
     if( videoOutputBuffer->format->BytesPerPixel == 1 ) {
-        SDL_SetColors(videoOutputBuffer, input->format->palette->colors,
+        
+        /*SDL_SetColors(videoOutputBuffer, input->format->palette->colors,
                       0, input->format->palette->ncolors);
+        */
+        SDL_SetPaletteColors(input->format->palette, input->format->palette->colors, 0, input->format->palette->ncolors);
+        SDL_SetSurfacePalette(videoOutputBuffer, input->format->palette);
     }
     switch(videoq) {
     case -1:
