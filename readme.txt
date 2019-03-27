@@ -1,3 +1,7 @@
+This is an ill-thought out attempt to bring FreeCNC back from the dead, as an excuse to get familiar with porting SDL 1.2 apps to SDL 2 and ultimately, build a version that'll run on my switch.
+
+I know OpenRA would be a better starting point, but that would require a working Mono.
+
 -------------------------------------------------------------------------------
 1. Overview
 -------------------------------------------------------------------------------
@@ -38,10 +42,10 @@ and how to run the game.
 FreeCNC is licensed under the terms of the GPL version 2, see
 license.txt for details.
 
-FreeCNC uses Lua 5.1, licensed under the MIT license, see
+FreeCNC uses Lua 5.3, licensed under the MIT license, see
 http://www.lua.org/license.html for more information.
 
-FreeCNC also uses SDL 1.2, licensed under the LGPL, see
+FreeCNC also uses SDL 2, licensed under the LGPL, see
 http://www.libsdl.org/license.php for more information.
 
 -------------------------------------------------------------------------------
@@ -58,8 +62,7 @@ This section will outline how to compile FreeCNC.
   - Visual C++ 2005 (express will work).
 
   Libraries:
-  - SDL 1.2.11.
-  - SDL_mixer 1.2.6.
+  - SDL 2
   - Boost 1.34.
 
 4.2. Compiling with Cmake and GNU-C++
@@ -238,6 +241,12 @@ located.
 7.1. Team
 =========
 
+  Ben Field (estuans) - ben@nowa.re
+  Necromancer
+
+7.2. Previous team members
+==========================
+
   Euan MacGregor (zx64) - euan@freecnc.org
   developer
 
@@ -246,9 +255,6 @@ located.
 
   Thomas Johansson (prencher) - thomas@freecnc.org
   developer, website admin
-
-7.2. Previous team members
-==========================
 
   Bernd Ritter (comrad) - email unknown
   old website
